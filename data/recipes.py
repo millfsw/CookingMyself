@@ -14,3 +14,4 @@ class Recipe(SqlAlchemyBase):
         sqlalchemy.DateTime, default=datetime.datetime.now
     )
     status = sqlalchemy.Column(sqlalchemy.String)
+    user = orm.relationship("User")
