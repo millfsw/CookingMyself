@@ -1,6 +1,6 @@
 from flask import Flask, render_template
-from CookingMyself.data.users import User
-from CookingMyself.data import db_session
+from data.users import User
+from data import db_session
 
 app = Flask(__name__)
 
