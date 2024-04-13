@@ -1,5 +1,6 @@
 import sqlalchemy
 import datetime
+from sqlalchemy.orm import relationship
 from .db_session import SqlAlchemyBase
 
 
@@ -7,12 +8,12 @@ class Comment(SqlAlchemyBase):
     __tablename__ = "comments"
 
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
-    userid = Column(Integer, ForeignKey("users.id"))
-    recipeid = Column(Integer, ForeignKey("recipes.id"))
+    userid = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("users.id"))
+    recipeid = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("recipes.id"))
     content = sqlalchemy.Column(sqlalchemy.String)
     creation_date = sqlalchemy.Column(
         sqlalchemy.DateTime, default=datetime.datetime.now
     )
     status = sqlalchemy.Column(sqlalchemy.String)
-    recipe = orm.relationship("Recipe")
-    user = orm.relationship("User")
+    recipe = relationship("Recipe")
+    user = relationship("User")
