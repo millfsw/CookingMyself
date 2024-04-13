@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from data.users import User
 from data import db_session
 
@@ -22,7 +22,7 @@ def get_recipes():
     return [recipe for recipe in db_sess.query(Recipe).all()]
 
 
-@app.route("/registration")
+@app.route("/registration", methods=["POST", "GET"])
 def registration_user():
     if request.method == "GET":
         return render_template("registration_page.html")
@@ -39,3 +39,7 @@ def registration_user():
         db_sess.add(user)
 
         db_sess.commit()
+
+@app.route("/login")
+def login_user():
+    return render_template("login_page.html")
