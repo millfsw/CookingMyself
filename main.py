@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request
 from data.users import User
+from data.recipes import Recipe
+from data.comments import Comment
 from data import db_session
 
 app = Flask(__name__)
@@ -39,6 +41,8 @@ def registration_user():
         db_sess.add(user)
 
         db_sess.commit()
+        return render_template("first_page.html")
+
 
 @app.route("/login")
 def login_user():
