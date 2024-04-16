@@ -14,4 +14,7 @@ class User(SqlAlchemyBase):
     registration_date = sqlalchemy.Column(
         sqlalchemy.DateTime, default=datetime.datetime.now
     )
+    changed_date = sqlalchemy.Column(
+        sqlalchemy.DateTime, default=datetime.datetime.now
+    )
     status = sqlalchemy.Column(sqlalchemy.String)
