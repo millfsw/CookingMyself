@@ -18,6 +18,7 @@ def get_recipes():
             db_sess.query(User).filter(User.id == recipe.userid).first().name,
             recipe.name,
             recipe.description[:220],
+            recipe.path_to_photo,
         ]
         for i, recipe in enumerate(recipes)
     ]
@@ -34,7 +35,7 @@ def add_recipe(recipe):
     new_recipe.name = recipe[1]
     new_recipe.description = recipe[2]
     new_recipe.category = recipe[3]
-    new_recipe.path_ti_photo = recipe[4]
+    new_recipe.path_to_photo = recipe[4]
     new_recipe.status = "Активен"
 
     db_sess.add(new_recipe)
