@@ -25,6 +25,19 @@ def get_recipes():
     return recipes
 
 
+def get_data_user():
+    global MAIN_USER
+    db_session.global_init("CookingMyself.db")
+    db_sess = db_session.create_session()
+    data_user = (
+        db_sess.query(User)
+        .filter(User.name == MAIN_USER, User.status == "Активен")
+        .first()
+    )
+
+    return data_user.name, data_user.email
+
+
 def add_recipe(recipe):
     global MAIN_USER
     db_session.global_init("CookingMyself.db")
@@ -32,10 +45,10 @@ def add_recipe(recipe):
 
     new_recipe = Recipe()
     new_recipe.userid = db_sess.query(User).filter(User.name == MAIN_USER).userid
-    new_recipe.name = recipe[1]
-    new_recipe.description = recipe[2]
-    new_recipe.category = recipe[3]
-    new_recipe.path_to_photo = recipe[4]
+    new_recipe.name = recipe[0]
+    new_recipe.description = recipe[1]
+    new_recipe.category = recipe[2]
+    new_recipe.path_to_photo = recipe[3]
     new_recipe.status = "Активен"
 
     db_sess.add(new_recipe)
@@ -81,13 +94,36 @@ def correct_password(name, password):
 
 @app.route("/")
 def first_page():
-    return render_template("first_page.html")
+    global MAIN_USER
+    return render_template("first_page.html", main_user=MAIN_USER)
+
+
+@app.route("/logout")
+def logout():
+    global MAIN_USER
+    MAIN_USER = ""
+    return render_template("first_page.html", main_user=MAIN_USER)
+
+
+@app.route("/create_recipe", methods=["GET", "POST"])
+def create_recipe():
+    if request.method == "GET":
+        return render_template("create_recipe_page.html")
+
+    elif request.method == "POST":
+        recipe_title = request.form["recipe-title"]
+        recipe_description = request.form["recipe-description"]
+        recipe_category = request.form["recipe-category"]
+        recipe_image = request.files["recipe-image"]
+        add_recipe([recipe_title, recipe_description, recipe_category, recipe_image])
+        return render_template("profile_page.html")
 
 
 @app.route("/recipes")
 def recipes_page():
+    global MAIN_USER
     recipes = get_recipes()
-    return render_template("recipes_page.html", recipes=recipes)
+    return render_template("recipes_page.html", recipes=recipes, main_user=MAIN_USER)
 
 
 @app.route("/registration", methods=["POST", "GET"])
@@ -102,7 +138,7 @@ def registration_user():
                 [request.form["name"], request.form["email"], request.form["password"]]
             )
             MAIN_USER = request.form["name"]
-            return render_template("first_page.html")
+            return render_template("first_page.html", main_user=MAIN_USER)
 
         return render_template("login_page.html")
 
@@ -118,7 +154,14 @@ def login_user():
             return render_template("registration_page.html")
 
         if not correct_password(request.form["name"], request.form["password"]):
-            MAIN_USER = request.form["name"]
             return render_template("login_page.html")
 
-        return render_template("first_page.html")
+        MAIN_USER = request.form["name"]
+        return render_template("first_page.html", main_user=MAIN_USER)
+
+
+@app.route("/profile")
+def profile_user():
+    global MAIN_USER
+    data_user = get_data_user()
+    return render_template("profile_page.html", user=data_user)
