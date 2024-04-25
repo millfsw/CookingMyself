@@ -93,9 +93,9 @@
 </div>
 </nav>
 
-  <div class="recipe-container">
+<div class="recipe-container">
     <h1>Создание рецепта</h1>
-    <form action="{{ url_for('create_recipe') }}" method="POST">
+    <form action="{{ url_for('create_recipe') }}" enctype="multipart/form-data" method="POST">
       <div class="form-group">
         <label for="recipe-title">Название рецепта</label>
         <input style="background-color: rgb(158, 157, 157)" type="text" id="recipe-title" name="recipe-title" required>
@@ -108,14 +108,14 @@
         <label for="recipe-category" >Категория</label>
         <select style="background-color: rgb(158, 157, 157)" id="recipe-category" name="recipe-category" required>
           <option value="">Выберите категорию</option>
-          <option value="breakfast">Завтрак</option>
-          <option value="lunch">Обед</option>
-          <option value="dinner">Ужин</option>
-          <option value="Hotter">Горячее</option>
-          <option value="garnish">Гарнир</option>
-          <option value="salad">Салат</option>
-          <option value="soup">Суп</option>
-          <option value="vegetarian">Вегетарианская</option>
+          <option value="Завтрак">Завтрак</option>
+          <option value="Обед">Обед</option>
+          <option value="Ужин">Ужин</option>
+          <option value="Горячее">Горячее</option>
+          <option value="Гарнир">Гарнир</option>
+          <option value="Салат">Салат</option>
+          <option value="Суп">Суп</option>
+          <option value="Вегетарианская">Вегетарианская</option>
       </select>
   </div>
   <div class="form-group">

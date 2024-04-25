@@ -3,9 +3,14 @@ from data.users import User
 from data.recipes import Recipe
 from data.comments import Comment
 from data import db_session
+import os
+
+
+MAIN_USER = ""
+UPLOAD_FOLDER = "static/data/image"
 
 app = Flask(__name__)
-MAIN_USER = ""
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 
 def get_recipes():
@@ -44,7 +49,7 @@ def add_recipe(recipe):
     db_sess = db_session.create_session()
 
     new_recipe = Recipe()
-    new_recipe.userid = db_sess.query(User).filter(User.name == MAIN_USER).userid
+    new_recipe.userid = db_sess.query(User).filter(User.name == MAIN_USER).first().id
     new_recipe.name = recipe[0]
     new_recipe.description = recipe[1]
     new_recipe.category = recipe[2]
@@ -111,12 +116,22 @@ def create_recipe():
         return render_template("create_recipe_page.html")
 
     elif request.method == "POST":
+
         recipe_title = request.form["recipe-title"]
         recipe_description = request.form["recipe-description"]
         recipe_category = request.form["recipe-category"]
         recipe_image = request.files["recipe-image"]
-        add_recipe([recipe_title, recipe_description, recipe_category, recipe_image])
-        return render_template("profile_page.html")
+        path = os.path.join(app.config["UPLOAD_FOLDER"], recipe_image.filename)
+        recipe_image.save(path.replace("\\", "/"))
+        add_recipe(
+            [
+                recipe_title,
+                recipe_description,
+                recipe_category,
+                path[7:],
+            ]
+        )
+        return render_template("profile_page.html", user=get_data_user())
 
 
 @app.route("/recipes")
