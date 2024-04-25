@@ -17,7 +17,7 @@ def get_recipes():
             i + 1,
             db_sess.query(User).filter(User.id == recipe.userid).first().name,
             recipe.name,
-            recipe.description[:220],
+            recipe.description[:],
             recipe.path_to_photo.replace("\\", "/"),
         ]
         for i, recipe in enumerate(recipes)
