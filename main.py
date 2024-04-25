@@ -4,6 +4,7 @@ from data.recipes import Recipe
 from data.comments import Comment
 from data import db_session
 import os
+import datetime
 
 
 MAIN_USER = ""
@@ -11,6 +12,16 @@ UPLOAD_FOLDER = "static/data/image"
 
 app = Flask(__name__)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+
+
+def get_comments(recipeid):
+    db_session.global_init("CookingMyself.db")
+    db_sess = db_session.create_session()
+    comments = [
+        comment
+        for comment in db_sess.query(Comment).filter(Comment.recipeid == recipeid).all()
+    ]
+    return comments
 
 
 def get_recipes():
@@ -41,6 +52,21 @@ def get_data_user():
     )
 
     return data_user.name, data_user.email
+
+
+def add_comment(comment):
+    global MAIN_USER
+    db_session.global_init("CookingMyself.db")
+    db_sess = db_session.create_session()
+
+    new_comment = Comment()
+    new_comment.userid = db_sess.query(User).filter(User.name == MAIN_USER).first().id
+    # new_comment.recipeid = db_sess.query().filter(User.name == MAIN_USER).first().id
+    new_comment.content = comment[0]
+    new_comment.status = "Активен"
+
+    db_sess.add(new_recipe)
+    db_sess.commit()
 
 
 def add_recipe(recipe):
@@ -88,6 +114,19 @@ def is_login(name):
     db_session.global_init("CookingMyself.db")
     db_sess = db_session.create_session()
     return db_sess.query(User).filter(User.name == name)
+
+
+def delete_recipe(id):
+    db_session.global_init("CookingMyself.db")
+    db_sess = db_session.create_session()
+    recipe = (
+        db_sess.query(Recipe)
+        .filter(Recipe.id == id and Recipe.status == "Активен")
+        .first()
+    )
+    recipe.status = "Удален"
+    recipe.changed_date = datetime.datetime.now()
+    return render_template("profile_page.html", user=get_data_user())
 
 
 def correct_password(name, password):
