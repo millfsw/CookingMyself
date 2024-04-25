@@ -5,64 +5,70 @@
   <link rel="stylesheet" href="static/css/style.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   <title>Создание рецепта</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      margin: 0;
-      padding: 0;
-  }
-  .recipe-container {
-      max-width: 600px;
-      margin: 50px auto;
-      background-color: #fff;
-      border-radius: 10px;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-      padding: 40px;
-  }
-  .recipe-container h1 {
-      text-align: center;
-      margin-top: 0;
-  }
-  .form-group {
-      margin-bottom: 20px;
-  }
-  .form-group label {
-      display: block;
-      font-weight: bold;
-      margin-bottom: 5px;
-  }
-  .form-group input,
-  .form-group textarea,
-  .form-group select {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 16px;
-  }
-  .form-group textarea {
-      height: 150px;
-  }
-  .form-group input[type="file"] {
-      padding: 5px 0;
-  }
-  .recipe-actions {
-      display: flex;
-      justify-content: flex-end;
-      margin-top: 30px;
-  }
-  .recipe-actions button {
-      background-color: #4CAF50;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-      margin-left: 10px;
-  }
+        font-family: Comic Sans MS, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+    }
+    .recipe-container {
+        max-width: 600px;
+        margin: 50px auto;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        padding: 40px;
+        background: transparent;
+        border: none;
+        backdrop-filter: blur(15px) brightness(80%);
+        justify-content: center;
+        align-items: center;
+    }
+    .recipe-container h1 {
+        text-align: center;
+        margin-top: 0;
+    }
+    .form-group {
+        margin-bottom: 20px;
+    }
+    .form-group label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+    .form-group textarea {
+        height: 150px;
+    }
+    .form-group input[type="file"] {
+        padding: 5px 0;
+    }
+    .recipe-actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 30px;
+    }
+    .recipe-actions button {
+        background-color: #4CAF50;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        margin-left: 10px;
+    }
 </style>
 </head>
 <body>
@@ -86,20 +92,21 @@
   </div>
 </div>
 </nav>
-<div class="recipe-container">
+
+  <div class="recipe-container">
     <h1>Создание рецепта</h1>
     <form action="{{ url_for('create_recipe') }}" method="POST">
       <div class="form-group">
         <label for="recipe-title">Название рецепта</label>
-        <input type="text" id="recipe-title" name="recipe-title" required>
+        <input style="background-color: rgb(158, 157, 157)" type="text" id="recipe-title" name="recipe-title" required>
     </div>
     <div class="form-group">
         <label for="recipe-description">Описание</label>
-        <textarea id="recipe-description" name="recipe-description" required></textarea>
+        <textarea style="background-color: rgb(158, 157, 157)" id="recipe-description" name="recipe-description" required></textarea>
     </div>
     <div class="form-group">
-        <label for="recipe-category">Категория</label>
-        <select id="recipe-category" name="recipe-category" required>
+        <label for="recipe-category" >Категория</label>
+        <select style="background-color: rgb(158, 157, 157)" id="recipe-category" name="recipe-category" required>
           <option value="">Выберите категорию</option>
           <option value="breakfast">Завтрак</option>
           <option value="lunch">Обед</option>
@@ -113,11 +120,11 @@
   </div>
   <div class="form-group">
     <label for="recipe-image">Фото рецепта</label>
-    <input type="file" id="recipe-image" name="recipe-image">
+    <input style="background-color: rgb(158, 157, 157)" type="file" id="recipe-image" name="recipe-image">
 </div>
 <div class="recipe-actions">
-    <button type="submit">Сохранить</button>
-    <button type="button">Отмена</button>
+    <button type="submit" style="color: #FEBF32; font-size: 16px; background-color: rgba(76, 97, 76, 0.75)">Сохранить</button>
+    <button type="button" onclick="window.history.back()" style="color: #FEBF32; font-size: 16px; background-color: rgba(76, 97, 76, 0.75)">Отмена</button>
 </div>
 </form>
 </div>
