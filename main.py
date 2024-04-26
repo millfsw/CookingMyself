@@ -260,11 +260,12 @@ def login_user():
         return render_template("first_page.html", main_user=MAIN_USER)
 
 
-@app.route("/profile")
+@app.route("/profile", methods=["POST", "GET"])
 def profile_user():
     global MAIN_USER
     data_user = get_data_user()
-    return render_template("profile_page.html", user=data_user)
+    recipes = get_main_users_recipes()
+    return render_template("profile_page.html", user=data_user, recipes=recipes)
 
 
 @app.route("/about_recipe", methods=["POST", "GET"])
