@@ -88,7 +88,7 @@ html {
   margin: 10px 0;
 }
 
-.card-read {
+.btn {
   cursor: pointer;
   font-size: 14px;
   font-weight: 700;
@@ -97,16 +97,6 @@ html {
   position: relative;
   text-align: right;
   text-transform: uppercase;
-}
-
-.card-read:after {
-  background-color: #b8bddd;
-  content: "";
-  display: block;
-  height: 1px;
-  position: absolute;
-  top: 9px;
-  width: 65%;
 }
 
 .card-tag {
