@@ -23,6 +23,13 @@ def get_comments(recipeid):
         .filter(Comment.recipeid == recipeid, Comment.status == "Активен")
         .all()
     ]
+    comments = [
+        [
+            comment.content,
+            db_sess.query(User).filter(User.id == comment.userid).first().name,
+        ]
+        for comment in comments
+    ]
     return comments
 
 
