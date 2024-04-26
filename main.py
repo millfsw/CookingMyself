@@ -19,21 +19,60 @@ def get_comments(recipeid):
     db_sess = db_session.create_session()
     comments = [
         comment
-        for comment in db_sess.query(Comment).filter(Comment.recipeid == recipeid).all()
+        for comment in db_sess.query(Comment)
+        .filter(Comment.recipeid == recipeid, Comment.status == "Активен")
+        .all()
     ]
     return comments
+
+
+def get_main_users_recipes():
+    global MAIN_USER
+    db_session.global_init("CookingMyself.db")
+    db_sess = db_session.create_session()
+    userid = (
+        db_sess.query(User)
+        .filter(User.name == MAIN_USER, User.status == "Активен")
+        .first()
+        .id
+    )
+    recipes = [
+        recipe
+        for recipe in db_sess.query(Recipe)
+        .filter(Recipe.userid == userid, recipe.status == "Активен")
+        .all()
+    ]
+    return recipes
+
+
+def sorted_recipes(condition):
+    CONDITION = {"По дате создания": 0, "По автору": 1, "По алфавиту": 2}
+    main_condition = CONDITION[condition]
+
+    recipes = get_recipes()
+    return sorted(recipes, key=lambda x: x[main_condition])
+
+
+def filter_recipes(condition):
+    recipes = get_recipes()
+    return list(
+        filter(lambda x: x[3].split(": ")[0] == condition.capitalize(), recipes)
+    )
 
 
 def get_recipes():
     db_session.global_init("CookingMyself.db")
     db_sess = db_session.create_session()
-    recipes = [recipe for recipe in db_sess.query(Recipe).all()]
+    recipes = [
+        recipe
+        for recipe in db_sess.query(Recipe).filter(Recipe.status == "Активен").all()
+    ]
     recipes = [
         [
             i + 1,
             db_sess.query(User).filter(User.id == recipe.userid).first().name,
             recipe.name,
-            recipe.description[:],
+            f"{recipe.category.capitalize(  )}: {recipe.description[:]}"[:],
             recipe.path_to_photo.replace("\\", "/"),
         ]
         for i, recipe in enumerate(recipes)
