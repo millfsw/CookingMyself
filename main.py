@@ -265,3 +265,33 @@ def profile_user():
     global MAIN_USER
     data_user = get_data_user()
     return render_template("profile_page.html", user=data_user)
+
+
+@app.route("/about_recipe", methods=["POST", "GET"])
+def about_recipes():
+    global MAIN_USER
+    id_recipe = request.form["get_recipe"]
+    recipe = get_about_recipe(id_recipe)
+    return render_template("about_recipe.html", recipe=recipe, main_user=MAIN_USER)
+
+
+def get_about_recipe(id_recipe):
+    db_session.global_init("CookingMyself.db")
+    db_sess = db_session.create_session()
+
+    recipe = (
+        db_sess.query(Recipe)
+        .filter(Recipe.status == "Активен", Recipe.id == id_recipe)
+        .first()
+    )
+
+    recipe = [
+        recipe.id,
+        db_sess.query(User).filter(User.id == recipe.userid).first().name,
+        recipe.name,
+        f"{recipe.category.capitalize(  )}: {recipe.description[:]}"[:],
+        recipe.path_to_photo.replace("\\", "/"),
+    ]
+
+    return recipe
+
