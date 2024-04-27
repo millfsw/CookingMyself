@@ -46,7 +46,7 @@ def get_main_users_recipes():
     recipes = [
         recipe
         for recipe in db_sess.query(Recipe)
-        .filter(Recipe.userid == userid, recipe.status == "Активен")
+        .filter(Recipe.userid == userid, Recipe.status == "Активен")
         .all()
     ]
     return recipes
