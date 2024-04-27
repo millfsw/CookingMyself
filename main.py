@@ -125,7 +125,7 @@ def add_comment(comment, recipe_id):
     new_comment = Comment()
     new_comment.userid = db_sess.query(User).filter(User.name == MAIN_USER).first().id
     new_comment.recipeid = recipe_id
-    new_comment.content = comment[0]
+    new_comment.content = comment
     new_comment.status = "Активен"
 
     db_sess.add(new_comment)
@@ -317,14 +317,18 @@ def profile_user():
 @app.route("/about_recipe", methods=["POST", "GET"])
 def about_recipes():
     global MAIN_USER
-    if "comment" in request.form:
-        content = request.form["comment"]
+    if "submit" in request.form:
         id_recipe = request.form["submit"]
+    if "comment" in request.form and MAIN_USER:
+        content = request.form["comment"]
         add_comment(content, id_recipe)
-    else:
+    elif "get_recipe" in request.form:
         id_recipe = request.form["get_recipe"]
     recipe = get_about_recipe(id_recipe)
-    return render_template("about_recipe.html", recipe=recipe, main_user=MAIN_USER)
+    comments = get_comments(id_recipe)
+    return render_template(
+        "about_recipe.html", recipe=recipe, main_user=MAIN_USER, comments=comments
+    )
 
 
 @app.route("/delete_recipe", methods=["POST", "GET"])

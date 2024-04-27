@@ -21,8 +21,14 @@
                         <form method="POST">
                             <label>Комментарий</label>
                             <input style="background-color: rgb(158, 157, 157)" type="text" name="comment" class="form-control" required>
-                            <input style="background-color: rgb(76, 97, 76);  color: #FEBF32; margin-top: 10px;" type="submit" name="submit" class="btn btn-outline-secondary" value="{{recipe[5]}}"> Отправить/>
+                            <button style="background-color: rgb(76, 97, 76);  color: #FEBF32; margin-top: 10px;" type="submit" name="submit" class="btn btn-outline-secondary" value="{{recipe[5]}}">Отправить</button>
                         </form>
+                        {% for comment in comments: %}
+                        <div>
+                            <h4>{{comment[0]}}</h4>
+                            <h3>{{comment[1]}}</h3>
+                        </div>
+                        {% endfor %}
                     </div>
                     <div class="col-md-7">
                       <div class="card-body" style="padding-top: 65px;">
