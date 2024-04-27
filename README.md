@@ -30,7 +30,7 @@
 
 ## Ссылка на сайт:
 
-
+https://cookingmyselfyl2024.pythonanywhere.com/
 
 ## Навигация
 
