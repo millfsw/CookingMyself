@@ -49,6 +49,17 @@ def get_main_users_recipes():
         .filter(Recipe.userid == userid, Recipe.status == "Активен")
         .all()
     ]
+    recipes = [
+        [
+            i + 2,
+            db_sess.query(User).filter(User.id == recipe.userid).first().name,
+            recipe.name,
+            f"{recipe.category.capitalize(  )}: {recipe.description[:]}"[:],
+            recipe.path_to_photo.replace("\\", "/"),
+            recipe.id,
+        ]
+        for i, recipe in enumerate(recipes)
+    ]
     return recipes
 
 
@@ -62,9 +73,14 @@ def sorted_recipes(condition):
 
 def filter_recipes(condition):
     recipes = get_recipes()
-    return list(
+    recipes = list(
         filter(lambda x: x[3].split(": ")[0] == condition.capitalize(), recipes)
     )
+    recipes = [
+        [i + 1, recipe[1], recipe[2], recipe[3], recipe[4], recipe[5]]
+        for i, recipe in enumerate(recipes)
+    ]
+    return recipes
 
 
 def get_recipes():
@@ -81,6 +97,7 @@ def get_recipes():
             recipe.name,
             f"{recipe.category.capitalize(  )}: {recipe.description[:]}"[:],
             recipe.path_to_photo.replace("\\", "/"),
+            recipe.id,
         ]
         for i, recipe in enumerate(recipes)
     ]
@@ -100,18 +117,18 @@ def get_data_user():
     return data_user.name, data_user.email
 
 
-def add_comment(comment):
+def add_comment(comment, recipe_id):
     global MAIN_USER
     db_session.global_init("CookingMyself.db")
     db_sess = db_session.create_session()
 
     new_comment = Comment()
     new_comment.userid = db_sess.query(User).filter(User.name == MAIN_USER).first().id
-    # new_comment.recipeid = db_sess.query().filter(User.name == MAIN_USER).first().id
+    new_comment.recipeid = recipe_id
     new_comment.content = comment[0]
     new_comment.status = "Активен"
 
-    db_sess.add(new_recipe)
+    db_sess.add(new_comment)
     db_sess.commit()
 
 
@@ -172,7 +189,10 @@ def delete_recipe(id):
     )
     recipe.status = "Удален"
     recipe.changed_date = datetime.datetime.now()
-    return render_template("profile_page.html", user=get_data_user())
+    db_sess.commit()
+    return render_template(
+        "profile_page.html", user=get_data_user(), recipe=get_main_users_recipes()
+    )
 
 
 def correct_password(name, password):
@@ -185,19 +205,18 @@ def correct_password(name, password):
 def get_about_recipe(id_recipe):
     db_session.global_init("CookingMyself.db")
     db_sess = db_session.create_session()
-
     recipe = (
         db_sess.query(Recipe)
         .filter(Recipe.status == "Активен", Recipe.id == id_recipe)
         .first()
     )
-
     recipe = [
         recipe.id,
         db_sess.query(User).filter(User.id == recipe.userid).first().name,
         recipe.name,
         f"{recipe.category.capitalize(  )}: {recipe.description[:]}"[:],
         recipe.path_to_photo.replace("\\", "/"),
+        recipe.id,
     ]
 
     return recipe
@@ -240,9 +259,15 @@ def create_recipe():
         return render_template("profile_page.html", user=get_data_user())
 
 
-@app.route("/recipes")
+@app.route("/recipes", methods=["GET", "POST"])
 def recipes_page():
     global MAIN_USER
+    if request.method == "POST" and request.form["recipe_category"] != "Все":
+        condition = request.form["recipe_category"]
+        recipes = filter_recipes(condition)
+        return render_template(
+            "recipes_page.html", recipes=recipes, main_user=MAIN_USER
+        )
     recipes = get_recipes()
     return render_template("recipes_page.html", recipes=recipes, main_user=MAIN_USER)
 
@@ -292,6 +317,17 @@ def profile_user():
 @app.route("/about_recipe", methods=["POST", "GET"])
 def about_recipes():
     global MAIN_USER
-    id_recipe = request.form["get_recipe"]
+    if "comment" in request.form:
+        content = request.form["comment"]
+        id_recipe = request.form["submit"]
+        add_comment(content, id_recipe)
+    else:
+        id_recipe = request.form["get_recipe"]
     recipe = get_about_recipe(id_recipe)
     return render_template("about_recipe.html", recipe=recipe, main_user=MAIN_USER)
+
+
+@app.route("/delete_recipe", methods=["POST", "GET"])
+def delete_recipe_users():
+    id_recipe = request.form["get_recipe"]
+    return delete_recipe(id_recipe)
