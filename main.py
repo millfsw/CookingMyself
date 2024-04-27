@@ -190,9 +190,7 @@ def delete_recipe(id):
     recipe.status = "Удален"
     recipe.changed_date = datetime.datetime.now()
     db_sess.commit()
-    return render_template(
-        "profile_page.html", user=get_data_user(), recipe=get_main_users_recipes()
-    )
+    return profile_user()
 
 
 def correct_password(name, password):
