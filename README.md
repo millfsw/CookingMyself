@@ -64,7 +64,8 @@
 
 6. Регистрация и вход
    - На этой странице вы сможете зарегестрироваться, если вы зашли впервые, или зайти в свой аккаунт <br>
-
+   <image src="screenshots/registration.png" width="800" height="400">
+   <image src="screenshots/authorization.png" width="800" height="400">
 
 
 
