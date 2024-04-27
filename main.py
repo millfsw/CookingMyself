@@ -25,8 +25,8 @@ def get_comments(recipeid):
     ]
     comments = [
         [
-            comment.content,
             db_sess.query(User).filter(User.id == comment.userid).first().name,
+            comment.content,
         ]
         for comment in comments
     ]
