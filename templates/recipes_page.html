@@ -101,7 +101,7 @@
           <span class="card-description subtle">{{recipe[3][:219]}}...</span>
           <form method="POST" action="/about_recipe">
             <button class="btn" type="submit" value="{{recipe[0]}}" name="get_recipe">Читать</button>
-          </form>
+        </form>
       </div>
       <div>
         <img src="{{url_for('static', filename=recipe[4])}}" width="500" alt="sa" class="card-media"/>

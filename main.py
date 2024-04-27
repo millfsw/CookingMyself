@@ -182,6 +182,27 @@ def correct_password(name, password):
         return user.password == password
 
 
+def get_about_recipe(id_recipe):
+    db_session.global_init("CookingMyself.db")
+    db_sess = db_session.create_session()
+
+    recipe = (
+        db_sess.query(Recipe)
+        .filter(Recipe.status == "Активен", Recipe.id == id_recipe)
+        .first()
+    )
+
+    recipe = [
+        recipe.id,
+        db_sess.query(User).filter(User.id == recipe.userid).first().name,
+        recipe.name,
+        f"{recipe.category.capitalize(  )}: {recipe.description[:]}"[:],
+        recipe.path_to_photo.replace("\\", "/"),
+    ]
+
+    return recipe
+
+
 @app.route("/")
 def first_page():
     global MAIN_USER
@@ -274,25 +295,3 @@ def about_recipes():
     id_recipe = request.form["get_recipe"]
     recipe = get_about_recipe(id_recipe)
     return render_template("about_recipe.html", recipe=recipe, main_user=MAIN_USER)
-
-
-def get_about_recipe(id_recipe):
-    db_session.global_init("CookingMyself.db")
-    db_sess = db_session.create_session()
-
-    recipe = (
-        db_sess.query(Recipe)
-        .filter(Recipe.status == "Активен", Recipe.id == id_recipe)
-        .first()
-    )
-
-    recipe = [
-        recipe.id,
-        db_sess.query(User).filter(User.id == recipe.userid).first().name,
-        recipe.name,
-        f"{recipe.category.capitalize(  )}: {recipe.description[:]}"[:],
-        recipe.path_to_photo.replace("\\", "/"),
-    ]
-
-    return recipe
-
